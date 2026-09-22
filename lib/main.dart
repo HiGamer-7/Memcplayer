@@ -180,7 +180,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.deepPurple.withValues(alpha: 0.25),
+                      color: Colors.deepPurple.withOpacity(0.25),
                       blurRadius: 100,
                       spreadRadius: 20,
                     )
@@ -244,7 +244,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: Colors.black.withValues(alpha: 0.4),
+            color: Colors.black.withOpacity(0.4),
             child: Row(
               children: [
                 Icon(icon, color: Colors.white, size: 20),
@@ -290,7 +290,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Colors.white.withOpacity(0.1),
                       child: Row(
                         children: [
                           const Text('MEMC', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -330,7 +330,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withOpacity(0.1),
                   child: Column(
                     children: [
                       Row(
@@ -338,8 +338,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           Text(_formatDuration(position), style: const TextStyle(color: Colors.white70)),
                           Expanded(
                             child: Slider(
-                              value: position.inMilliseconds.toDouble().clamp(0.0, duration.inMilliseconds.toDouble()),
-                              max: duration.inMilliseconds.toDouble() > 0 ? duration.inMilliseconds.toDouble() : 1.0,
+                              value: position.inMilliseconds.toDouble().clamp(
+                                  0.0,
+                                  duration.inMilliseconds.toDouble() > 0
+                                      ? duration.inMilliseconds.toDouble()
+                                      : 1.0),
+                              max: duration.inMilliseconds.toDouble() > 0
+                                  ? duration.inMilliseconds.toDouble()
+                                  : 1.0,
                               onChanged: (val) {
                                 _seekRelative((val / 1000).toInt() - position.inSeconds);
                               },
