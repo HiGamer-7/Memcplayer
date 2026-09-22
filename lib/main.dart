@@ -175,7 +175,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         },
         child: Stack(
           children: [
-            // Ambient Glow Background
             Center(
               child: Container(
                 decoration: BoxDecoration(
@@ -195,14 +194,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     : _buildEmptyState(),
               ),
             ),
-
-            // Vertical Gestures Indicators
             if (_showBrightnessIndicator)
               _buildOverlaySlider(Icons.brightness_6, _currentBrightness, true),
             if (_showVolumeIndicator)
               _buildOverlaySlider(Icons.volume_up, _currentVolume, false),
-
-            // One UI Glass Controls Overlay
             if (_showControls) _buildOneUiControls(),
           ],
         ),
@@ -215,7 +210,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.video_library_rounded, size: 72, color: Colors.white38),
+          const Icon(Icons.video_library_rounded, size: 72, color: Colors.white38),
           const SizedBox(height: 16),
           const Text(
             'Select a Video to Begin',
@@ -282,7 +277,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Top Bar
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -315,7 +309,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               ],
             ),
             const Spacer(),
-            // Center Play / Pause
             if (_controller != null)
               IconButton(
                 iconSize: 64,
@@ -331,7 +324,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 },
               ),
             const Spacer(),
-            // Bottom Bar Timeline & Settings Slider
             ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: BackdropFilter(
