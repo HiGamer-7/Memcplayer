@@ -29,11 +29,9 @@ jobs:
 
       - name: Fix Plugin Compatibility, SDK Versions & Gradle Memory
         run: |
-          # Disable strict Kotlin target validation and set Gradle heap memory
           echo "kotlin.jvm.target.validation.mode=ignore" >> android/gradle.properties
           echo "org.gradle.jvmargs=-Xmx4096m" >> android/gradle.properties
 
-          # Force all plugin modules (file_picker, volume_controller, etc.) to use compileSdk 36 and Java 17
           cat << 'EOF' >> android/build.gradle
 
           subprojects {
@@ -44,6 +42,11 @@ jobs:
                           compileOptions {
                               sourceCompatibility JavaVersion.VERSION_17
                               targetCompatibility JavaVersion.VERSION_17
+                          }
+                          buildTypes {
+                              release {
+                                  signingConfig signingConfigs.debug
+                              }
                           }
                       }
                   }
@@ -59,11 +62,16 @@ jobs:
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Build Release APK
-        run: flutter build apk --release --no-tree-shake-icons
+      - name: Build Release APK via Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MEMC-Player-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            build/app/outputs/flutter-apk/*.apk
