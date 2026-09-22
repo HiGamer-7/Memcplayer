@@ -27,6 +27,14 @@ jobs:
       - name: Generate Fresh Android Platform Files
         run: flutter create --platforms=android .
 
+      - name: Configure Gradle Memory & Properties
+        run: |
+          cat << 'EOF' >> android/gradle.properties
+          org.gradle.jvmargs=-Xmx4096m
+          android.useAndroidX=true
+          enableJetifier=true
+          EOF
+
       - name: Get Dependencies
         run: flutter pub get
 
