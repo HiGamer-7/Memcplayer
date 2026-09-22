@@ -27,12 +27,32 @@ jobs:
       - name: Generate Fresh Android Platform Files
         run: flutter create --platforms=android .
 
-      - name: Configure Gradle Memory & Properties
+      - name: Fix Plugin JVM Compatibility & Gradle Memory
         run: |
-          cat << 'EOF' >> android/gradle.properties
-          org.gradle.jvmargs=-Xmx4096m
-          android.useAndroidX=true
-          enableJetifier=true
+          # Disable strict Kotlin target validation and add memory limit
+          echo "kotlin.jvm.target.validation.mode=ignore" >> android/gradle.properties
+          echo "org.gradle.jvmargs=-Xmx4096m" >> android/gradle.properties
+
+          # Force all plugin modules (like volume_controller) to target Java 17 for both Java and Kotlin
+          cat << 'EOF' >> android/build.gradle
+
+          subprojects {
+              afterEvaluate { project ->
+                  if (project.hasProperty('android')) {
+                      project.android {
+                          compileOptions {
+                              sourceCompatibility JavaVersion.VERSION_17
+                              targetCompatibility JavaVersion.VERSION_17
+                          }
+                      }
+                  }
+                  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                      kotlinOptions {
+                          jvmTarget = '17'
+                      }
+                  }
+              }
+          }
           EOF
 
       - name: Get Dependencies
